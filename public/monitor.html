@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>低温阵列扫描 · 监看墙</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-mode="monitor">
+  <header class="topbar">
+    <h1>低温阵列扫描监看墙</h1>
+    <div id="conn" class="conn conn-connecting">
+      <span class="dot"></span><span id="conn-text">连接中…</span>
+    </div>
+  </header>
+
+  <section id="banner" class="banner hidden"></section>
+
+  <main class="layout monitor-layout">
+    <section class="panel main-panel">
+      <div class="meta-row">
+        <div><span class="muted">采集代号</span><strong id="meta-gen">—</strong></div>
+        <div><span class="muted">连续序号</span><strong id="meta-seq">—</strong></div>
+        <div><span class="muted">高水位</span><strong id="meta-hwm">—</strong></div>
+      </div>
+      <h2>各通道累计值</h2>
+      <div id="totals" class="totals"><em class="muted">等待数据…</em></div>
+      <h2>连续累计曲线</h2>
+      <canvas id="chart" width="1000" height="420"></canvas>
+    </section>
+  </main>
+  <script type="module" src="/monitor.js"></script>
+</body>
+</html>

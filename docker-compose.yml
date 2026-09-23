@@ -1,0 +1,43 @@
+# docker compose up -d            启动复核台与监看墙
+# 宿主机端口可配置：HOST_PORT=9090 docker compose up -d
+# docker compose run --rm verify 单次复核（代码测试 + 前端构建检查 + API/HTTP 冒烟）
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lowtemp-array-scan:latest
+    environment:
+      PORT: "8080"
+      HOST: "0.0.0.0"
+      DATA_FILE: /app/data/store.json
+    ports:
+      # 宿主机端口可配置，默认 8080
+      - "${HOST_PORT:-8080}:8080"
+    volumes:
+      - scan-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8080/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+
+  # 单次复核服务：构建镜像后依次执行 代码测试、前端构建检查、API/HTTP 冒烟，
+  # 以退出码报告结果（--rm 运行后即退出）。
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lowtemp-array-scan:latest
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      APP_BASE: http://app:8080
+    command: ["node", "scripts/verify-compose.mjs"]
+    restart: "no"
+
+volumes:
+  scan-data:

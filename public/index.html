@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>低温阵列扫描 · 复核台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-mode="console">
+  <header class="topbar">
+    <h1>低温阵列扫描复核台</h1>
+    <div id="conn" class="conn conn-connecting">
+      <span class="dot"></span><span id="conn-text">连接中…</span>
+    </div>
+  </header>
+
+  <section id="banner" class="banner hidden"></section>
+
+  <main class="layout">
+    <aside class="panel side">
+      <h2>采集控制</h2>
+      <form id="gen-form" autocomplete="off">
+        <label>通道（逗号分隔）
+          <input id="channels" name="channels" value="A,B,C" required />
+        </label>
+        <label>采集代号（可空，自动生成）
+          <input id="gen-name" name="generation" placeholder="gen-xxxx" />
+        </label>
+        <button type="submit" class="primary">新开一代采集</button>
+      </form>
+
+      <form id="append-form" autocomplete="off">
+        <h2>追加校正帧</h2>
+        <div id="inc-inputs" class="inc-inputs"><em class="muted">尚无采集</em></div>
+        <label>操作标识 opId（可空，自动生成并保留供重试）
+          <input id="opid" name="opId" placeholder="自动生成 UUID" />
+        </label>
+        <div class="btn-row">
+          <button type="submit" class="primary" id="append-btn" disabled>追加帧</button>
+          <button type="button" id="retry-btn" disabled>同参重试</button>
+        </div>
+      </form>
+      <section id="api-status" class="api-status muted"></section>
+    </aside>
+
+    <section class="panel main-panel">
+      <div class="meta-row">
+        <div><span class="muted">采集代号</span><strong id="meta-gen">—</strong></div>
+        <div><span class="muted">连续序号</span><strong id="meta-seq">—</strong></div>
+        <div><span class="muted">高水位</span><strong id="meta-hwm">—</strong></div>
+      </div>
+
+      <h2>各通道累计值</h2>
+      <div id="totals" class="totals"><em class="muted">等待数据…</em></div>
+
+      <h2>连续累计曲线</h2>
+      <canvas id="chart" width="900" height="360"></canvas>
+
+      <h2>最近帧（服务端仅保留最近 32 帧）</h2>
+      <div class="table-wrap">
+        <table id="frames-table">
+          <thead><tr><th>序号</th><th>opId</th><th>增量</th><th>累计</th><th>时间</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

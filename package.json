@@ -1,0 +1,17 @@
+{
+  "name": "lowtemp-array-scan",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "低温阵列扫描复核台：代际采集、幂等追加、SSE 续传与全量重置",
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test test/store.test.mjs test/core.test.mjs test/api.test.mjs",
+    "build": "node scripts/build-frontend.js",
+    "smoke": "node scripts/smoke.mjs",
+    "verify": "node scripts/verify.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
